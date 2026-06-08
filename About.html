@@ -1,195 +1,211 @@
 <!doctype html>
 <html lang="zh-CN">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>个人介绍 - 我的主页</title>
+  <title>个人介绍 - 王宇航</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
   <link href="public/background.css" rel="stylesheet">
   <link href="public/site.css" rel="stylesheet">
 </head>
-
 <body>
-  <!-- 导航栏 -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="index.html">我的主页</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html"><span class="brand-dot"></span>王宇航</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="navbar-nav ms-auto">
           <a class="nav-link" href="index.html">首页</a>
-          <a class="nav-link" href="data.html">数据</a>
-          <a class="nav-link active" aria-current="page" href="About.html">个人介绍</a>
+          <a class="nav-link active" href="About.html">个人介绍</a>
+          <a class="nav-link" href="data.html">科研项目</a>
+          <a class="nav-link" href="blog.html">博客</a>
         </div>
       </div>
     </div>
   </nav>
 
-  <!-- 背景 -->
-  <div class="background"></div>
-
-  <!-- 主要内容 -->
-  <div class="container mt-4">
+  <div class="container mt-5">
     <div class="row">
-      <!-- 左侧个人信息 -->
       <div class="col-lg-4 mb-4">
-        <div class="card shadow-lg">
-          <div class="card-body text-center">
-            <img src="public/beluga.jpg" alt="个人头像" class="rounded-circle mb-3 profile-img">
-            <h2 class="card-title text-white">你的名字</h2>
-            <p class="text-white-50">前端开发工程师 | 设计师 | 创作者</p>
-            <hr class="bg-white">
-            <div class="text-start">
-              <p class="text-white mb-2"><strong>📍 所在地:</strong> 中国</p>
-              <p class="text-white mb-2"><strong>📧 邮箱:</strong> your.email@example.com</p>
-              <p class="text-white mb-2"><strong>💼 职业:</strong> 前端开发工程师</p>
-            </div>
-            <div class="mt-3">
-              <a href="#" class="btn btn-outline-light btn-sm m-1">GitHub</a>
-              <a href="#" class="btn btn-outline-light btn-sm m-1">LinkedIn</a>
-              <a href="#" class="btn btn-outline-light btn-sm m-1">Twitter</a>
+        <div class="card">
+          <div class="card-body text-center py-4">
+            <img src="public/beluga.jpg" alt="头像" class="profile-img mb-3">
+            <h3 class="fw-bold mb-1">王宇航</h3>
+            <p class="text-muted mb-1">西安交通大学</p>
+            <p class="text-muted small mb-3">建筑学（主修）· 计算机科学与技术（辅修）</p>
+            <div class="d-flex justify-content-center gap-2">
+              <a href="mailto:Whale@stu.xjtu.edu.cn" class="btn btn-outline-primary btn-sm">Email</a>
+              <a href="https://lightblock.vercel.app" class="btn btn-outline-primary btn-sm">Blog</a>
+              <a href="#" class="btn btn-outline-primary btn-sm">GitHub</a>
             </div>
           </div>
         </div>
 
-        <!-- 技能卡片 -->
-        <div class="card shadow-lg mt-3">
-          <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">🛠️ 技能专长</h5>
-          </div>
+        <div class="card mt-3">
+          <div class="card-header">基本信息</div>
           <div class="card-body">
-            <div class="mb-3">
-              <label class="text-white">HTML/CSS</label>
-              <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: 90%">90%</div>
+            <p class="mb-1 small"><strong>出生年月：</strong>2003 年 11 月</p>
+            <p class="mb-1 small"><strong>所在学院：</strong>西交米兰学院</p>
+            <p class="mb-1 small"><strong>主修专业：</strong>建筑学（五年制）</p>
+            <p class="mb-1 small"><strong>辅修专业：</strong>计算机科学与技术</p>
+            <p class="mb-1 small"><strong>预计毕业：</strong>2027 年 6 月</p>
+            <p class="mb-0 small"><strong>邮箱：</strong>Whale@stu.xjtu.edu.cn</p>
+          </div>
+        </div>
+
+        <div class="card mt-3">
+          <div class="card-header">学业成绩</div>
+          <div class="card-body">
+            <div class="mb-3 text-center">
+              <div class="row">
+                <div class="col-6 border-end">
+                  <div class="stat-number-sm">3.7<span class="stat-unit-sm">/4.0</span></div>
+                  <small class="text-muted">主修 GPA<br>均分 88.2 · Top 20%</small>
+                </div>
+                <div class="col-6">
+                  <div class="stat-number-sm">3.8<span class="stat-unit-sm">/4.0</span></div>
+                  <small class="text-muted">辅修 GPA<br>均分 88.9</small>
+                </div>
               </div>
             </div>
-            <div class="mb-3">
-              <label class="text-white">JavaScript</label>
-              <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: 85%">85%</div>
-              </div>
-            </div>
-            <div class="mb-3">
-              <label class="text-white">Vue.js</label>
-              <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: 80%">80%</div>
-              </div>
-            </div>
-            <div class="mb-3">
-              <label class="text-white">React</label>
-              <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: 75%">75%</div>
-              </div>
-            </div>
-            <div class="mb-3">
-              <label class="text-white">Node.js</label>
-              <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: 70%">70%</div>
-              </div>
-            </div>
+            <hr>
+            <p class="mb-1 small"><strong>高分课程：</strong></p>
+            <p class="mb-0 small text-muted">计算机视觉与模式识别 96 分 · 面向对象程序设计 97 分</p>
+          </div>
+        </div>
+
+        <div class="card mt-3">
+          <div class="card-header">英语能力</div>
+          <div class="card-body">
+            <p class="mb-1"><strong>CET-6：575 分</strong></p>
+            <p class="mb-0 small text-muted">具备流畅的英文学术阅读、写作与交流能力。自主完成 Stanford CS231n、CS229 全英课程。</p>
           </div>
         </div>
       </div>
 
-      <!-- 右侧详细介绍 -->
       <div class="col-lg-8">
-        <!-- 关于我 -->
-        <div class="card shadow-lg mb-4">
-          <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">👤 关于我</h4>
-          </div>
-          <div class="card-body text-white">
-            <p>你好！我是一名热爱技术的前端开发工程师，专注于创建美观、易用的 Web 应用。我有着多年的开发经验，熟悉各种前端技术和框架。</p>
-            <p>我热衷于学习新技术，不断探索前端领域的最佳实践。在工作中，我注重代码质量和用户体验，力求将每一个项目都做到最好。</p>
-            <p>除了编程，我还喜欢摄影、阅读和旅行。我相信生活中的灵感可以融入到工作中，创造出更有温度的产品。</p>
-          </div>
-        </div>
-
-        <!-- 工作经历 -->
-        <div class="card shadow-lg mb-4">
-          <div class="card-header bg-success text-white">
-            <h4 class="mb-0">💼 工作经历</h4>
-          </div>
+        <div class="card mb-4">
+          <div class="card-header">个人陈述</div>
           <div class="card-body">
-            <div class="timeline-item mb-4">
-              <h5 class="text-white">高级前端工程师</h5>
-              <p class="text-white-50">某知名科技公司 | 2023 - 至今</p>
-              <p class="text-white">负责公司核心产品的前端开发，带领团队完成多个重要项目的迭代和优化。</p>
-            </div>
-            <div class="timeline-item mb-4">
-              <h5 class="text-white">前端开发工程师</h5>
-              <p class="text-white-50">某创业公司 | 2021 - 2023</p>
-              <p class="text-white">参与公司产品的从 0 到 1 开发，使用 Vue.js 和 React 构建响应式 Web 应用。</p>
-            </div>
-            <div class="timeline-item">
-              <h5 class="text-white">初级前端工程师</h5>
-              <p class="text-white-50">某互联网公司 | 2019 - 2021</p>
-              <p class="text-white">负责网站前端开发和维护，学习并掌握了现代前端开发技术栈。</p>
+            <p>我是西安交通大学建筑学专业（五年制）2027 届本科生，同时辅修计算机科学与技术。建筑学的训练培养了我对三维空间的直觉理解、对复杂系统的建模能力，以及将抽象概念转化为可视化方案的设计思维；计算机科学的学习则赋予我严谨的算法思维和扎实的编程能力。</p>
+            <p>我的核心研究兴趣在于探索建筑学与计算机科学的交叉地带——<strong>三维视觉、计算机图形学与空间智能</strong>。我希望将建筑设计中的空间认知能力与 AI 技术相结合，在数字孪生、智慧城市、3D 场景理解等方向做出有价值的工作。</p>
+            <p class="mb-0">目前已具备从底层几何算法（C++ Bezier 求交）到神经网络（PyTorch NeRF 复现）再到交互应用（Unity 3D）的完整技术栈，获得国家级竞赛一等奖等多项荣誉。期待在研究生阶段进一步深造，探索空间智能的前沿课题。</p>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-header">研究兴趣</div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="p-3 rounded interest-card">
+                  <h6 class="fw-bold">计算机图形学 / 三维视觉</h6>
+                  <p class="mb-0 small text-muted">NeRF 神经渲染、几何处理、B-Spline/Bezier、3D 重建、空间智能</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-3 rounded interest-card">
+                  <h6 class="fw-bold">大模型与 AI 系统</h6>
+                  <p class="mb-0 small text-muted">TVM 编译器优化、跨模态大模型、边缘端推理加速</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-3 rounded interest-card">
+                  <h6 class="fw-bold">计算机视觉 / 多媒体</h6>
+                  <p class="mb-0 small text-muted">人体姿态估计、图像生成、视觉感知</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-3 rounded interest-card">
+                  <h6 class="fw-bold">智慧城市 / 数字孪生</h6>
+                  <p class="mb-0 small text-muted">BIM 数字化、城市级建模、交互可视化</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- 教育背景 -->
-        <div class="card shadow-lg mb-4">
-          <div class="card-header bg-info text-white">
-            <h4 class="mb-0">🎓 教育背景</h4>
+        <div class="card mb-4">
+          <div class="card-header">竞赛获奖</div>
+          <div class="card-body">
+            <div class="award-item mb-3">
+              <span class="award-level award-gold">国家级</span>
+              <strong>全国大学生数字媒体科技作品及创意竞赛 全国一等奖</strong>
+              <p class="mb-0 small text-muted">2025 年 · 古建筑数字孪生与游戏化展示项目</p>
+            </div>
+            <div class="award-item mb-3">
+              <span class="award-level award-gold">国家级</span>
+              <strong>全国大学生生物医学工程创新设计竞赛 全国三等奖</strong>
+              <p class="mb-0 small text-muted">2024 年 · AI 交互式康复评估与训练系统</p>
+            </div>
+            <div class="award-item mb-3">
+              <span class="award-level award-gold">国际级</span>
+              <strong>美国缪斯设计奖 (MUSE Design Awards)</strong>
+              <p class="mb-0 small text-muted">建筑设计类</p>
+            </div>
+            <div class="award-item mb-3">
+              <span class="award-level award-silver">省级</span>
+              <strong>蓝桥杯全国软件和信息技术专业人才大赛 C++ A组 省级一等奖</strong>
+              <p class="mb-0 small text-muted">算法编程竞赛</p>
+            </div>
+            <div class="award-item mb-3">
+              <span class="award-level award-silver">省级</span>
+              <strong>全国 3D 精英联赛 省级二等奖</strong>
+              <p class="mb-0 small text-muted">2024 年</p>
+            </div>
+            <div class="award-item mb-3">
+              <span class="award-level award-silver">省级</span>
+              <strong>中国国际"互联网+"创新创业大赛 省级铜奖</strong>
+              <p class="mb-0 small text-muted">2023 年</p>
+            </div>
+            <div class="award-item mb-3">
+              <span class="award-level award-bronze">校级</span>
+              <strong>西安交通大学三等奖学金 · 优秀学生 · 腾飞杯二等奖</strong>
+              <p class="mb-0 small text-muted"></p>
+            </div>
           </div>
-          <div class="card-body text-white">
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-header">技术能力</div>
+          <div class="card-body">
             <div class="mb-3">
-              <h5>计算机科学与技术 学士学位</h5>
-              <p class="text-white-50">某知名大学 | 2015 - 2019</p>
+              <div class="d-flex justify-content-between mb-1"><small class="fw-semibold">编程语言</small></div>
+              <div><span class="tag">C++</span><span class="tag">Python</span><span class="tag">C#</span></div>
+            </div>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between mb-1"><small class="fw-semibold">AI / 深度学习</small></div>
+              <div><span class="tag">PyTorch</span><span class="tag">MediaPipe</span><span class="tag">NeRF</span><span class="tag">TVM</span></div>
+            </div>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between mb-1"><small class="fw-semibold">图形与交互</small></div>
+              <div><span class="tag">Unity 3D</span><span class="tag">Bezier/B-Spline</span><span class="tag">3D 建模</span></div>
+            </div>
+            <div>
+              <div class="d-flex justify-content-between mb-1"><small class="fw-semibold">工具与平台</small></div>
+              <div><span class="tag">Colab</span><span class="tag">Git</span><span class="tag">Linux</span></div>
             </div>
           </div>
         </div>
 
-        <!-- 兴趣爱好 -->
-        <div class="card shadow-lg">
-          <div class="card-header bg-warning text-dark">
-            <h4 class="mb-0">🎯 兴趣爱好</h4>
-          </div>
+        <div class="card">
+          <div class="card-header">申请意向</div>
           <div class="card-body">
-            <div class="row text-center">
-              <div class="col-md-3 col-6 mb-3">
-                <div class="p-3 bg-dark rounded">
-                  <span class="display-6">💻</span>
-                  <p class="text-white mt-2 mb-0">编程</p>
-                </div>
-              </div>
-              <div class="col-md-3 col-6 mb-3">
-                <div class="p-3 bg-dark rounded">
-                  <span class="display-6">📷</span>
-                  <p class="text-white mt-2 mb-0">摄影</p>
-                </div>
-              </div>
-              <div class="col-md-3 col-6 mb-3">
-                <div class="p-3 bg-dark rounded">
-                  <span class="display-6">📚</span>
-                  <p class="text-white mt-2 mb-0">阅读</p>
-                </div>
-              </div>
-              <div class="col-md-3 col-6 mb-3">
-                <div class="p-3 bg-dark rounded">
-                  <span class="display-6">✈️</span>
-                  <p class="text-white mt-2 mb-0">旅行</p>
-                </div>
-              </div>
-            </div>
+            <p class="mb-2"><strong>研究方向：</strong>计算机图形学 / 三维视觉 / 空间智能 / 大模型与 AI 系统</p>
+            <p class="mb-0"><strong>意向院校：</strong>中国科学技术大学、华中科技大学、电子科技大学、东南大学、南开大学等</p>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 页脚 -->
-  <footer class="bg-dark text-white text-center py-4 mt-5">
+  <footer class="text-center mt-5">
     <div class="container">
-      <p class="mb-0">&copy; 2026 我的个人网站。All Rights Reserved.</p>
+      <p class="mb-1">王宇航 · 西安交通大学 · 建筑学 &amp; 计算机科学与技术</p>
+      <p class="mb-0 text-muted small">Whale@stu.xjtu.edu.cn</p>
     </div>
   </footer>
 
@@ -197,5 +213,4 @@
     integrity="sha384-/mhDoLbDldZc3qpsJHpLogda//BVZbgYuw6kof4u2FrCedxOtgRZDTHgHUhOCVim"
     crossorigin="anonymous"></script>
 </body>
-
 </html>

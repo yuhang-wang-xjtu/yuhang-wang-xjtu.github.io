@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PI-HMR: Towards Robust In-bed Temporal Human Shape Reconstruction with Contact Pressure Sensing - 王宇航</title>
+  <meta name="description" content="**发表**: CVPR 2025 (CCF-A) | **arXiv**: 2503.00068">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+    integrity="sha384-n8MVd4RsVj49/AMDl88Fwz1NsRHyomxGq7ETTkZPhW5lV5JmFbv7oeTzhww26UlY" crossorigin="anonymous">
+  <link href="../public/background.css" rel="stylesheet">
+  <link href="../public/site.css" rel="stylesheet">
+  <link href="../public/page.css" rel="stylesheet">
+  <style>
+    .katex-display { display: block; margin: 1.2rem 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+    .katex-display>.katex { display: inline-block; text-align: initial; max-width: 100%; }
+    .katex { font: normal 1.1em KaTeX_Main, "Times New Roman", serif; line-height: 1.2; text-indent: 0; white-space: nowrap; }
+    .katex .katex-html { display: inline !important; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html"><span class="brand-dot"></span>王宇航</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link" href="../index.html">首页</a>
+          <a class="nav-link" href="../About.html">个人介绍</a>
+          <a class="nav-link" href="../data.html">科研项目</a>
+          <a class="nav-link active" href="../blog.html">博客</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5 mb-5">
+    <div class="page-card">
+      <div class="page-content">
+        <div class="blog-post-meta">
+          <span class="text-muted">2026-06-08</span>
+          <a href="../blog.html" class="ms-3">&larr; 返回博客</a>
+        </div>
+        <h1>PI-HMR: Towards Robust In-bed Temporal Human Shape Reconstruction with Contact Pressure Sensing</h1>
+<p><strong>发表</strong>: CVPR 2025 (CCF-A) | <strong>arXiv</strong>: 2503.00068
+<strong>单位</strong>: 中国科学技术大学（精密普适实验室，PPLab）
+<strong>一作</strong>: Ziyu Wu*, Yufan Xiong*（共一）| <strong>通讯</strong>: Xiaohui Cai</p>
+<hr>
+<h2>一、研究问题</h2>
+<p>用<strong>压力感知床单</strong>（pressure-sensing bedsheet）重建床上人体的 3D 形状与运动，替代传统视觉方案。</p>
+<p><strong>三大瓶颈</strong>:</p>
+<ol>
+<li><strong>压力数据特性未充分利用</strong>：单通道、零值背景无语义、压力轮廓与人体形状存在信息歧义</li>
+<li><strong>数据多样性差</strong>：压力数据集规模小（&lt;20 人），传感器规格不一，难以整合</li>
+<li><strong>3D 标签质量差</strong>：单目 SMPLify 优化存在深度歧义（四肢误判悬空）和自穿透</li>
+</ol>
+<hr>
+<h2>二、整体框架（三件套工具链）</h2>
+<pre><code>SMPLify-IB (标签生成) → PI-HMR (核心推理) → KD + TTO (性能增强)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>作用</th>
+<th>核心技术</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SMPLify-IB</td>
+<td>为 TIP 数据集重新生成高质量 SMPL 伪标签</td>
+<td>重力约束 + 轻量自穿透检测</td>
+</tr>
+<tr>
+<td>PI-HMR</td>
+<td>从压力序列回归 3D 人体网格</td>
+<td>多尺度特征融合 (MFF)</td>
+</tr>
+<tr>
+<td>跨模态 KD</td>
+<td>将 RGB 域的人体先验迁移至压力域</td>
+<td>CLIFF→HMR 特征图+输出蒸馏</td>
+</tr>
+<tr>
+<td>测试时优化 (TTO)</td>
+<td>用习惯先验修正推理结果</td>
+<td>VQ-VAE 运动先验</td>
+</tr>
+</tbody></table>
+<p><strong>为什么需要 SMPLify-IB？</strong>
+真值 GT 需要动捕设备，成本极高。已有的 TIP 数据集用普通 SMPLify 生成伪标签，质量差。SMPLify-IB 利用物理约束以算力换人力，生成更可靠标签作为训练监督信号。</p>
+<hr>
+<h2>三、SMPLify-IB：标签生成</h2>
+<h3>3.1 核心创新</h3>
+<h4>重力约束（解决深度歧义）</h4>
+<p><strong>洞察</strong>: 人躺在床上静止时，四肢不应悬空（否则肌肉持续发力，不自然）。</p>
+<ul>
+<li>用 2D 关键点 GT 计算速度：若四肢速度 &lt; 阈值且高度 &gt; 床面 → 判定为单目歧义导致的&quot;误判抬起&quot;</li>
+<li>指数惩罚项将静态四肢推向床面：Lg = Σ I(v &lt; thre) · exp(w·z)</li>
+</ul>
+<h4>轻量自穿透检测（解决自穿模）</h4>
+<p><strong>对比传统</strong>: SMPLify-XMC 用 Winding Numbers 计算全部 6890 顶点 × 13776 面的实体角，需 22.62s/迭代。</p>
+<p><strong>新方法</strong>: 将 SMPL 网格聚类为 24 个近似凸的 segment，用向量点积判断穿透：</p>
+<pre><code>vi vj · vi cj  &lt; 0  →  顶点 vi 在 segment Sj 内部 → 穿透
+              ≥ 0  →  在外部
+</code></pre>
+<p><strong>性能</strong>: 检测速度提升 <strong>53.9 倍</strong>（0.42s），准确率 98.32%。下采样 1/3 版本加速 <strong>450 倍</strong>。</p>
+<h4>双向力设计（既防穿透又促接触）</h4>
+<table>
+<thead>
+<tr>
+<th>状态</th>
+<th>检测</th>
+<th>损失</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>穿透</td>
+<td>D(Si, Sj) &gt; 0</td>
+<td>L_push = +</td>
+<td>D</td>
+</tr>
+<tr>
+<td>靠近但未穿透</td>
+<td>SDF∈(0, 0.02m)</td>
+<td>L_pull = -</td>
+<td>C</td>
+</tr>
+</tbody></table>
+<p>距离衰减 <code>exp(-λ·||ci - cj||)</code> 确保只有相近的 segment 受作用——相当于类分子间作用力的势场。</p>
+<h3>3.2 优化目标</h3>
+<pre><code>L_IB = λJ·LJ + λp·Lp + λsm·Lsm + λcons·Lcons + λbc·Lbc + λg·Lg + λsc·Lsc
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>损失</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>LJ</strong></td>
+<td>2D 重投影误差（透视投影 + 标定焦距）</td>
+</tr>
+<tr>
+<td><strong>Lp</strong></td>
+<td>姿态 GMM 先验 + 形状正则 + 躯干合理高度（臀&lt;肩，腰&lt;均值）</td>
+</tr>
+<tr>
+<td><strong>Lsm</strong></td>
+<td>帧间速度/加速度平滑，消除抖动</td>
+</tr>
+<tr>
+<td><strong>Lcons</strong></td>
+<td>滑动窗口重叠帧的一致性</td>
+</tr>
+<tr>
+<td><strong>Lbc</strong></td>
+<td>床面接触：近床鼓励，穿床惩罚</td>
+</tr>
+<tr>
+<td><strong>Lg</strong></td>
+<td>重力约束</td>
+</tr>
+<tr>
+<td><strong>Lsc</strong></td>
+<td>自接触（穿透斥力 + 近邻引力）</td>
+</tr>
+</tbody></table>
+<h3>3.3 两阶段优化</h3>
+<ul>
+<li><strong>第一阶段</strong>: 128 帧滑动窗口（50% 重叠），CLIFF 预测作初始化，联合优化 β/θ/t，仅处理手-躯干穿透</li>
+<li><strong>第二阶段</strong>: 固定 β 为同一人所有帧的均值，仅优化 θ/t，处理全部身体 segment 间穿透</li>
+<li>Adam, lr=0.01, 各 500 次迭代</li>
+</ul>
+<hr>
+<h2>四、PI-HMR：核心推理网络</h2>
+<h3>4.1 整体架构</h3>
+<pre><code>压力序列 V [T=15, H=64, W=64]
+    │
+    ▼
+ResNet50 静态编码器（跨模态 KD 预训练权重）
+    │  逐帧提取 → X = {x_t ∈ R^(2048×H₁×W₁)}
+    ▼
+多尺度特征融合模块 MFF
+    │  → G = {g_t ∈ R^1024}
+    ▼
+2 层 Transformer（8 头，dropout 0.1，DropPath 0.2）
+    │  时序建模 → 取均值作为中帧表示
+    ▼
+IEF SMPL 回归器
+    │  → θ(24×3), β(10), t(3)
+    ▼
+SMPL 模型 → 3D mesh + 3D joints
+</code></pre>
+<h3>4.2 MFF 多尺度特征融合（核心创新）</h3>
+<p>三条并行分支，Concat 融合为 1024 维特征：</p>
+<pre><code>ResNet50 输出 x_t
+    │
+    ├── ① Global Branch [512-dim]
+    │     AttentionPooling（来自 CLIP）→ 全局上下文摘要
+    │
+    ├── ② Local Branch [256-dim]
+    │     可学习 mask + 空间位置编码（传感器固定位置先验）→ AttentionPooling
+    │
+    └── ③ Sampling Branch [256-dim]
+          TopK(压力值, K=128) 高压点 + 辅助 2D 关键点回归器预测的 12 个关节点
+          → 在 upsampled 特征图上取特征 → 1 层 Transformer → 均值池化
+</code></pre>
+<p><strong>SF-K 推理时的关键点来源</strong>：PI-HMR 内含一个辅助 2D 关键点回归器，从压力图预测 12 个 2D 关节点位置，受 L_2D 监督。推理时即用预测结果采样。</p>
+<p><strong>消融结果</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>去掉组件</th>
+<th>MPJPE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全部开启</td>
+<td><strong>57.13</strong></td>
+</tr>
+<tr>
+<td>去掉 SF-K</td>
+<td>62.23（最伤）</td>
+</tr>
+<tr>
+<td>去掉可学习 mask</td>
+<td>60.95</td>
+</tr>
+<tr>
+<td>去掉空间位置编码</td>
+<td>60.65</td>
+</tr>
+<tr>
+<td>去掉 AttentionPooling</td>
+<td>59.21</td>
+</tr>
+</tbody></table>
+<p>TopK=128 最优（太少丢轮廓，太多引入噪声）。</p>
+<h3>4.3 IEF 回归器</h3>
+<p><strong>Iterative Error Feedback</strong>，三轮迭代修正：</p>
+<pre><code>[z_final || θ_mean] → Δθ₀ → θ₁ = θ_mean + Δθ₀
+[z_final || θ₁]     → Δθ₁ → θ₂ = θ₁ + Δθ₁
+[z_final || θ₂]     → Δθ₂ → θ_final = θ₂ + Δθ₂
+</code></pre>
+<p>每次输入特征 z 和当前估计 θ 的拼接，预测修正残差 Δθ。本质是用网络模拟了梯度下降：不一次性跳到答案，而是由粗到精三步校正。β 和 t 直接由全连接层单次预测。</p>
+<h3>4.4 损失函数</h3>
+<pre><code>L_pi = L_SMPL + 300·L_3D + 0.5·L_2D
+
+L_SMPL = 1·||β-β̂||² + 60·||θ-θ̂||² + 60·||t-t̂||²
+L_3D   = ||J_3D - Ĵ_3D||²
+L_2D   = ||J_2D - Ĵ_2D||²（监督辅助 2D 关键点回归器）
+</code></pre>
+<p>训练：AdamW, lr=3e-4, 100 epochs, batch=16, 5 轮 warmup + cosine 调度, PyTorch 2.0.1, RTX 4090。</p>
+<hr>
+<h2>五、跨模态知识蒸馏</h2>
+<h3>5.1 结构</h3>
+<pre><code>教师: CLIFF (ResNet50 + IEF), 输入 RGB, 已在 COCO/MPII 等大规模数据预训练
+学生: HMR  (ResNet50 + IEF), 输入压力图（单通道）
+                   ↓ 共享架构 ↓
+     4 个残差块的特征图维度天然对齐
+</code></pre>
+<h3>5.2 三重监督</h3>
+<pre><code>L_KD = L_pi(S(I_P), y)                    # GT 标签监督
+     + L_pi(S(I_P), T(I_R))               # 教师输出蒸馏
+     + Σ||M_S_i - M_T_i||                 # 4 层特征图 L1 对齐
+</code></pre>
+<p><strong>依赖前提</strong>: TIP 数据集三模态同步采集——每帧同时有压力图、RGB、2D 标注，三元组天然存在。</p>
+<p><strong>消融</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>配置</th>
+<th>MPJPE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>纯 GT 监督</td>
+<td>75.06</td>
+</tr>
+<tr>
+<td>GT + 输出蒸馏</td>
+<td>77.86</td>
+</tr>
+<tr>
+<td>GT + 特征蒸馏</td>
+<td>67.34</td>
+</tr>
+<tr>
+<td>三重全开</td>
+<td><strong>66.30</strong></td>
+</tr>
+</tbody></table>
+<p>特征级蒸馏贡献最大——中间层的对齐传递了比输出标签更底层、更泛化的认知。</p>
+<h3>5.3 权重迁移</h3>
+<p>预训练后丢弃 IEF 回归器，仅将 ResNet50 编码器权重作为 PI-HMR 静态编码器的初始化，在端到端训练时继续微调。</p>
+<hr>
+<h2>六、测试时优化 (TTO)</h2>
+<h3>6.1 动机</h3>
+<p>推理时没有 GT 供监督，也无法对压力图直接做 2D 关键点回归优化。但床上动作模式有限且规律——可以用预学的&quot;习惯&quot;修正。</p>
+<h3>6.2 机制</h3>
+<p>预训练 VQ-VAE 编码床上翻身的姿态序列模式（仅输入 θ，不含 β 和 t）：</p>
+<pre><code>PI-HMR 初始预测 θ₀ → VQ-VAE 重建 → 投影到最近的动作模式
+                          ↓
+L_TTO = α·L_m(θ, θ₀) + (1-α)·L_m(θ, VQ-VAE(θ)) + L_sm(θ)
+</code></pre>
+<ul>
+<li>第一项约束不要偏离初始预测太远</li>
+<li>第二项拉向合理动作模式</li>
+<li>第三项平滑约束</li>
+</ul>
+<p>30 次迭代，lr=0.01，滑动窗口 64，仅优化 θ。</p>
+<hr>
+<h2>七、实验结果</h2>
+<h3>7.1 主干结果</h3>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>输入</th>
+<th>MPJPE↓</th>
+<th>PA-MPJPE↓</th>
+<th>ACC-ERR↓</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HMR (baseline)</td>
+<td>单帧压力</td>
+<td>75.06</td>
+<td>57.97</td>
+<td>31.52</td>
+</tr>
+<tr>
+<td>PI-Mesh (前作)</td>
+<td>压力序列</td>
+<td>76.47</td>
+<td>54.65</td>
+<td>21.86</td>
+</tr>
+<tr>
+<td>TCMR (视觉 SOTA)</td>
+<td>压力序列</td>
+<td>64.37</td>
+<td>46.76</td>
+<td>20.12</td>
+</tr>
+<tr>
+<td><strong>PI-HMR</strong></td>
+<td>压力序列</td>
+<td><strong>59.46</strong></td>
+<td><strong>44.53</strong></td>
+<td><strong>9.12</strong></td>
+</tr>
+<tr>
+<td>PI-HMR + KD + TTO</td>
+<td>压力序列</td>
+<td><strong>55.50</strong></td>
+<td><strong>41.81</strong></td>
+<td><strong>9.96</strong></td>
+</tr>
+</tbody></table>
+<ul>
+<li>相比 PI-Mesh 降低 17.01mm</li>
+<li>ACC-ERR 大幅优于所有对比，时序平滑性极好</li>
+</ul>
+<h3>7.2 标签质量</h3>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>2D 投影误差 (pixel) ↓</th>
+<th>静态四肢平均高度 (mm) ↓</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CLIFF (RGB 预测)</td>
+<td>25.20</td>
+<td>-</td>
+</tr>
+<tr>
+<td>TIP 原始伪标签</td>
+<td>14.02</td>
+<td>142.84</td>
+</tr>
+<tr>
+<td><strong>SMPLify-IB</strong></td>
+<td><strong>9.65</strong></td>
+<td><strong>66.68</strong></td>
+</tr>
+</tbody></table>
+<p>四肢悬空大幅消除。</p>
+<hr>
+<h2>八、局限与展望</h2>
+<ol>
+<li><strong>手足精细度不足</strong>：SMPL 不支持手指/脚趾，无法精确刻画床上接触模式</li>
+<li><strong>未显式利用接触约束</strong>：端到端学习可能使预测的四肢脱离床面，需在模型中显式整合压力接触先验</li>
+<li><strong>信息歧义未完全解决</strong>：某些姿态下压力分布无法唯一确定人体姿态 → 期望引入大规模 VQ-VAE/Diffusion 运动生成模型</li>
+</ol>
+<hr>
+<h2>九、关键概念速查</h2>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>简述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>SMPL</strong></td>
+<td>可微分人体参数化模型：θ(72维姿态) + β(10维体态) + t(平移) → 6890 顶点网格</td>
+</tr>
+<tr>
+<td><strong>IEF</strong></td>
+<td>迭代误差反馈：三轮残差修正，从平均姿态逐步逼近真值</td>
+</tr>
+<tr>
+<td><strong>HMR</strong></td>
+<td>Kanazawa 2018 提出的单目端到端人体重建框架 (ResNet50 + IEF)</td>
+</tr>
+<tr>
+<td><strong>CLIFF</strong></td>
+<td>ECCV 2022，HMR 改进版，额外输入全帧边界框位置和相机焦距，推断绝对位姿</td>
+</tr>
+<tr>
+<td><strong>伪标签</strong></td>
+<td>算法自动生成的弱标注，以算力换人力，桥接&quot;标注不足&quot;与&quot;网络训练需求&quot;</td>
+</tr>
+<tr>
+<td><strong>VQ-VAE</strong></td>
+<td>离散潜变量自编码器，将连续运动编码到码本中的离散 token，学习运动模式</td>
+</tr>
+</tbody></table>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center">
+    <div class="container">
+      <p class="mb-1">王宇航 · 西安交通大学 · 建筑学 &amp; 计算机科学与技术</p>
+      <p class="mb-0 text-muted small">Whale@stu.xjtu.edu.cn</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-/mhDoLbDldZc3qpsJHpLogda//BVZbgYuw6kof4u2FrCedxOtgRZDTHgHUhOCVim"
+    crossorigin="anonymous"></script>
+</body>
+</html>

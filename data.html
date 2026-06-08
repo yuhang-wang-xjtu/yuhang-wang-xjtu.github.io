@@ -1,110 +1,127 @@
 <!doctype html>
 <html lang="zh-CN">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>数据 - 我的主页</title>
+  <title>科研项目 - 王宇航</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
   <link href="public/background.css" rel="stylesheet">
   <link href="public/site.css" rel="stylesheet">
 </head>
-
 <body>
-  <!-- 导航栏 -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="index.html">我的主页</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html"><span class="brand-dot"></span>王宇航</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="navbar-nav ms-auto">
           <a class="nav-link" href="index.html">首页</a>
-          <a class="nav-link active" aria-current="page" href="data.html">数据</a>
           <a class="nav-link" href="About.html">个人介绍</a>
+          <a class="nav-link active" href="data.html">科研项目</a>
+          <a class="nav-link" href="blog.html">博客</a>
         </div>
       </div>
     </div>
   </nav>
 
-  <!-- 背景 -->
-  <div class="background"></div>
-
-  <!-- 主要内容 -->
-  <div class="container mt-4">
-    <div class="row mb-4">
-      <div class="col-12 text-center">
-        <h1 class="text-white display-4">数据展示</h1>
-        <p class="text-white-50 lead">探索数据的奥秘</p>
-      </div>
+  <div class="container page-section">
+    <div class="text-center mb-5">
+      <h2 class="section-title">科研项目</h2>
+      <div class="divider"></div>
+      <p class="text-muted">从底层算法到 AI 应用的全栈研究经历</p>
     </div>
 
-    <!-- 数据卡片 -->
     <div class="row">
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card h-100 shadow-lg">
-          <div class="card-body text-center">
-            <h5 class="card-title text-white">数据卡片 1</h5>
-            <p class="card-text text-white-50">展示相关的数据信息和统计结果。</p>
-            <a href="Profile.html" class="btn btn-primary">查看详情</a>
+      <div class="col-lg-6 mb-4 fade-up">
+        <div class="card h-100">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span>Bezier 曲线求交算法优化与图形基础库</span>
+            <span class="badge bg-primary">底层算法</span>
+          </div>
+          <div class="card-body">
+            <p>深入研究三次 Bezier 曲线的求交问题，聚焦 Bezier Clipping 算法的凸包性质与收敛性分析。独立使用 C++ 编写核心求交模块，解决了多重根、相切等特殊几何条件下的求交遗漏与退化问题。同时构建了 B-Spline 和 Bezier 曲线的几何数据结构基础库。</p>
+            <p class="mb-2"><strong>成果：</strong>相较基准实现效率提升 35%，交付完整的算法模块与基础几何库。</p>
+            <div><span class="tag">C++</span><span class="tag">Bezier Clipping</span><span class="tag">B-Spline</span><span class="tag">计算几何</span></div>
           </div>
         </div>
       </div>
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card h-100 shadow-lg">
-          <div class="card-body text-center">
-            <h5 class="card-title text-white">数据卡片 2</h5>
-            <p class="card-text text-white-50">展示相关的数据信息和统计结果。</p>
-            <a href="Profile.html" class="btn btn-primary">查看详情</a>
+
+      <div class="col-lg-6 mb-4 fade-up">
+        <div class="card h-100">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span>AI 交互式康复评估与训练系统</span>
+            <span class="badge bg-success">全国三等奖</span>
+          </div>
+          <div class="card-body">
+            <p>面向居家康复场景，设计并实现了基于 AI 的实时人体姿态评估与交互训练系统。作为唯一 Unity 开发者，独立完成全部程序开发：基于 MediaPipe 实现人体关键点提取与姿态估计，开发 AI-to-角色动画实时驱动模块，完成交互 UI 与硬件通信逻辑。</p>
+            <p class="mb-2"><strong>获奖：</strong>全国大学生生物医学工程创新设计竞赛 全国三等奖。</p>
+            <div><span class="tag">Unity</span><span class="tag">MediaPipe</span><span class="tag">C#</span><span class="tag">姿态估计</span></div>
           </div>
         </div>
       </div>
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card h-100 shadow-lg">
-          <div class="card-body text-center">
-            <h5 class="card-title text-white">数据卡片 3</h5>
-            <p class="card-text text-white-50">展示相关的数据信息和统计结果。</p>
-            <a href="Profile.html" class="btn btn-primary">查看详情</a>
+
+      <div class="col-lg-6 mb-4 fade-up">
+        <div class="card h-100">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span>"神奇的文物在哪里" 数字孪生</span>
+            <span class="badge bg-success">全国一等奖</span>
+          </div>
+          <div class="card-body">
+            <p>腾讯产学合作项目，聚焦古建筑数字化孪生与游戏化展览。从历史文献与实拍照片中提取建筑数据，完成古建筑 1:1 比例三维建模与场景重建，并使用 Unity 开发游戏化交互逻辑，实现沉浸式文化体验。</p>
+            <p class="mb-2"><strong>获奖：</strong>全国大学生数字媒体科技作品及创意竞赛 全国一等奖、"互联网+" 省级铜奖。</p>
+            <div><span class="tag">Unity</span><span class="tag">3D 建模</span><span class="tag">数字孪生</span><span class="tag">古建筑</span></div>
           </div>
         </div>
       </div>
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card h-100 shadow-lg">
-          <div class="card-body text-center">
-            <h5 class="card-title text-white">数据卡片 4</h5>
-            <p class="card-text text-white-50">展示相关的数据信息和统计结果。</p>
-            <a href="Profile.html" class="btn btn-primary">查看详情</a>
+
+      <div class="col-lg-6 mb-4 fade-up">
+        <div class="card h-100">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span>NeRF 神经辐射场论文复现</span>
+            <span class="badge bg-info">独立复现</span>
+          </div>
+          <div class="card-body">
+            <p>独立使用 PyTorch + Colab 复现 NeRF 核心代码，实现给定稀疏视角输入下的照片级真实感新视角渲染。深入理解了隐式神经表示与传统显式建模的本质差异，为后续三维视觉研究打下理论基础。</p>
+            <div><span class="tag">PyTorch</span><span class="tag">NeRF</span><span class="tag">Colab</span><span class="tag">神经渲染</span></div>
           </div>
         </div>
       </div>
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card h-100 shadow-lg">
-          <div class="card-body text-center">
-            <h5 class="card-title text-white">数据卡片 5</h5>
-            <p class="card-text text-white-50">展示相关的数据信息和统计结果。</p>
-            <a href="Profile.html" class="btn btn-primary">查看详情</a>
+
+      <div class="col-lg-6 mb-4 fade-up">
+        <div class="card h-100">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span>AI 编译器 TVM 研究</span>
+            <span class="badge bg-info">系统方向</span>
+          </div>
+          <div class="card-body">
+            <p>深入学习 TVM 编译器架构（核心论文 + 官方文档），重点研究 Relay IR 中间表示的优化策略与底层算子调度机制。探索如何利用编译器技术提升 AI 模型在边缘设备上的推理效率。</p>
+            <div><span class="tag">TVM</span><span class="tag">编译器</span><span class="tag">Relay IR</span><span class="tag">模型优化</span></div>
           </div>
         </div>
       </div>
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card h-100 shadow-lg">
-          <div class="card-body text-center">
-            <h5 class="card-title text-white">数据卡片 6</h5>
-            <p class="card-text text-white-50">展示相关的数据信息和统计结果。</p>
-            <a href="Profile.html" class="btn btn-primary">查看详情</a>
+
+      <div class="col-lg-6 mb-4 fade-up">
+        <div class="card h-100">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span>自主学习：Stanford CS231n &amp; CS229</span>
+            <span class="badge bg-info">理论基础</span>
+          </div>
+          <div class="card-body">
+            <p>自主完成 Stanford 计算机视觉（CS231n）与机器学习（CS229）全英课程学习，系统掌握了深度学习理论、CNN/RNN/Transformer 架构、计算机视觉核心算法，具备扎实的 AI 理论基础。</p>
+            <div><span class="tag">Deep Learning</span><span class="tag">Computer Vision</span><span class="tag">Machine Learning</span></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 页脚 -->
-  <footer class="bg-dark text-white text-center py-4 mt-5">
+  <footer class="text-center">
     <div class="container">
-      <p class="mb-0">&copy; 2026 我的个人网站。All Rights Reserved.</p>
+      <p class="mb-1">王宇航 · 西安交通大学 · 建筑学 &amp; 计算机科学与技术</p>
+      <p class="mb-0 text-muted small">Whale@stu.xjtu.edu.cn</p>
     </div>
   </footer>
 
@@ -112,5 +129,4 @@
     integrity="sha384-/mhDoLbDldZc3qpsJHpLogda//BVZbgYuw6kof4u2FrCedxOtgRZDTHgHUhOCVim"
     crossorigin="anonymous"></script>
 </body>
-
 </html>

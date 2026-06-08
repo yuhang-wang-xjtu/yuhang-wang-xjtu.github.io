@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITLE}} - 王宇航</title>
+  <meta name="description" content="{{DESCRIPTION}}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+    integrity="sha384-n8MVd4RsVj49/AMDl88Fwz1NsRHyomxGq7ETTkZPhW5lV5JmFbv7oeTzhww26UlY" crossorigin="anonymous">
+  <link href="{{ROOT}}public/background.css" rel="stylesheet">
+  <link href="{{ROOT}}public/site.css" rel="stylesheet">
+  <link href="{{ROOT}}public/page.css" rel="stylesheet">
+  <style>
+    .katex-display { display: block; margin: 1.2rem 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+    .katex-display>.katex { display: inline-block; text-align: initial; max-width: 100%; }
+    .katex { font: normal 1.1em KaTeX_Main, "Times New Roman", serif; line-height: 1.2; text-indent: 0; white-space: nowrap; }
+    .katex .katex-html { display: inline !important; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="{{ROOT}}index.html"><span class="brand-dot"></span>王宇航</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link" href="{{ROOT}}index.html">首页</a>
+          <a class="nav-link" href="{{ROOT}}About.html">个人介绍</a>
+          <a class="nav-link" href="{{ROOT}}data.html">科研项目</a>
+          <a class="nav-link active" href="{{ROOT}}blog.html">博客</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5 mb-5">
+    <div class="page-card">
+      <div class="page-content">
+        <div class="blog-post-meta">
+          <span class="text-muted">{{DATE}}</span>
+          <a href="{{ROOT}}blog.html" class="ms-3">&larr; 返回博客</a>
+        </div>
+        {{CONTENT}}
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center">
+    <div class="container">
+      <p class="mb-1">王宇航 · 西安交通大学 · 建筑学 &amp; 计算机科学与技术</p>
+      <p class="mb-0 text-muted small">Whale@stu.xjtu.edu.cn</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-/mhDoLbDldZc3qpsJHpLogda//BVZbgYuw6kof4u2FrCedxOtgRZDTHgHUhOCVim"
+    crossorigin="anonymous"></script>
+</body>
+</html>

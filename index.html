@@ -1,101 +1,162 @@
 <!doctype html>
 <html lang="zh-CN">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>我的个人主页</title>
+  <title>王宇航 - 个人主页</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
   <link href="public/background.css" rel="stylesheet">
   <link href="public/site.css" rel="stylesheet">
 </head>
-
 <body>
-  <!-- 导航栏 -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="index.html">我的主页</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html"><span class="brand-dot"></span>王宇航</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-link active" aria-current="page" href="index.html">首页</a>
-          <a class="nav-link" href="data.html">数据</a>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link active" href="index.html">首页</a>
           <a class="nav-link" href="About.html">个人介绍</a>
+          <a class="nav-link" href="data.html">科研项目</a>
+          <a class="nav-link" href="blog.html">博客</a>
         </div>
-      </div>
-      <div class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="搜索" aria-label="Search">
-        <button class="btn btn-outline-light" type="submit">搜索</button>
       </div>
     </div>
   </nav>
 
-  <!-- 背景 -->
-  <div class="background"></div>
-
-  <!-- 主要内容 -->
-  <div class="container mt-4">
-    <!-- 欢迎区域 -->
-    <div class="row mb-4">
-      <div class="col-12 text-center">
-        <h1 class="text-white display-4">欢迎来到我的个人主页</h1>
-        <p class="text-white-50 lead">探索、创造、分享</p>
-      </div>
-    </div>
-
-    <!-- 项目卡片 -->
-    <div class="row">
-      <div class="col-sm-6 col-lg-4 mb-4">
-        <div class="card h-100 project-card">
-          <img src="public/beluga.jpg" class="card-img-top" alt="项目 1">
-          <div class="card-body">
-            <h5 class="card-title text-white">项目一</h5>
-            <p class="card-text text-white-50">这是一个精彩的项目介绍，展示我的工作和成就。</p>
-            <a href="Profile.html" class="btn btn-primary">查看详情</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6 col-lg-4 mb-4">
-        <div class="card h-100 project-card">
-          <img src="public/beluga.jpg" class="card-img-top" alt="项目 2">
-          <div class="card-body">
-            <h5 class="card-title text-white">项目二</h5>
-            <p class="card-text text-white-50">探索技术的边界，创造更好的用户体验。</p>
-            <a href="Profile.html" class="btn btn-primary">查看详情</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6 col-lg-4 mb-4">
-        <div class="card h-100 project-card">
-          <img src="public/beluga.jpg" class="card-img-top" alt="项目 3">
-          <div class="card-body">
-            <h5 class="card-title text-white">项目三</h5>
-            <p class="card-text text-white-50">不断创新，追求卓越，实现更多可能。</p>
-            <a href="Profile.html" class="btn btn-primary">查看详情</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6 col-lg-4 mb-4">
-        <div class="card h-100 project-card">
-          <img src="public/beluga.jpg" class="card-img-top" alt="项目 4">
-          <div class="card-body">
-            <h5 class="card-title text-white">项目四</h5>
-            <p class="card-text text-white-50">用代码改变世界，用设计点亮生活。</p>
-            <a href="Profile.html" class="btn btn-primary">查看详情</a>
-          </div>
-        </div>
+  <div class="hero">
+    <div class="container">
+      <h1>王宇航</h1>
+      <p>西安交通大学 · 建筑学 &amp; 计算机科学与技术<br>三维视觉 · 计算机图形学 · 空间智能</p>
+      <div class="mt-4">
+        <a href="About.html" class="btn btn-primary me-2">个人介绍</a>
+        <a href="data.html" class="btn btn-outline-primary">科研项目</a>
       </div>
     </div>
   </div>
 
-  <!-- 页脚 -->
-  <footer class="bg-dark text-white text-center py-4 mt-5">
+  <div class="container page-section">
+    <div class="row g-4 mb-5">
+      <div class="col-sm-6 col-lg-3 fade-up">
+        <div class="card text-center py-3">
+          <div class="card-body">
+            <div class="stat-number">3.7<span class="stat-unit">/4.0</span></div>
+            <div class="stat-label">主修 GPA</div>
+            <small class="text-muted">建筑学（Top 20%）</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3 fade-up">
+        <div class="card text-center py-3">
+          <div class="card-body">
+            <div class="stat-number">3.8<span class="stat-unit">/4.0</span></div>
+            <div class="stat-label">辅修 GPA</div>
+            <small class="text-muted">计算机科学与技术</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3 fade-up">
+        <div class="card text-center py-3">
+          <div class="card-body">
+            <div class="stat-number">575</div>
+            <div class="stat-label">CET-6</div>
+            <small class="text-muted">英语六级</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3 fade-up">
+        <div class="card text-center py-3">
+          <div class="card-body">
+            <div class="stat-number">6+</div>
+            <div class="stat-label">竞赛获奖</div>
+            <small class="text-muted">含国家级一等奖</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mb-5">
+      <h2 class="section-title">研究兴趣</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="row g-3 mb-5">
+      <div class="col-md-4 fade-up">
+        <div class="card h-100">
+          <div class="card-body text-center py-4">
+            <div class="interest-icon">&#9671;</div>
+            <h5>三维视觉与图形学</h5>
+            <p class="card-text">NeRF 神经渲染、Bezier 曲线几何算法、3D 重建、数字孪生</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 fade-up">
+        <div class="card h-100">
+          <div class="card-body text-center py-4">
+            <div class="interest-icon">&#9883;</div>
+            <h5>大模型与 AI 系统</h5>
+            <p class="card-text">TVM 编译器优化、跨模态大模型应用、边缘端推理加速</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 fade-up">
+        <div class="card h-100">
+          <div class="card-body text-center py-4">
+            <div class="interest-icon">&#9650;</div>
+            <h5>空间智能与智慧城市</h5>
+            <p class="card-text">城市级规模建模、BIM 数字化、人机交互与可视化</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mb-5">
+      <h2 class="section-title">代表项目</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-lg-4 mb-4 fade-up">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="card-meta">C++ · 计算几何</div>
+            <h5 class="card-title">Bezier 曲线求交算法优化</h5>
+            <p class="card-text">研究 Bezier Clipping 算法，解决特殊几何条件下的求交遗漏与退化问题，效率提升 35%。</p>
+            <div class="mb-2"><span class="tag">C++</span><span class="tag">Bezier Clipping</span><span class="tag">B-Spline</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4 mb-4 fade-up">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="card-meta">Unity · MediaPipe · AI</div>
+            <h5 class="card-title">AI 交互式康复评估系统</h5>
+            <p class="card-text">基于 MediaPipe 人体姿态估计，实时驱动虚拟角色。全国生医工竞赛三等奖。</p>
+            <div class="mb-2"><span class="tag">Unity</span><span class="tag">MediaPipe</span><span class="tag">C#</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4 mb-4 fade-up">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="card-meta">3D 建模 · 数字孪生</div>
+            <h5 class="card-title">"神奇的文物在哪里" 数字孪生</h5>
+            <p class="card-text">古建筑 1:1 三维重建与游戏化展示。全国数字媒体科技竞赛一等奖。</p>
+            <div class="mb-2"><span class="tag">Unity</span><span class="tag">3D 建模</span><span class="tag">数字孪生</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-3">
+      <a href="data.html" class="btn btn-outline-primary">查看全部项目 &rarr;</a>
+    </div>
+  </div>
+
+  <footer class="text-center">
     <div class="container">
-      <p class="mb-0">&copy; 2026 我的个人网站。All Rights Reserved.</p>
+      <p class="mb-1">王宇航 · 西安交通大学 · 建筑学 &amp; 计算机科学与技术</p>
+      <p class="mb-0 text-muted small">Whale@stu.xjtu.edu.cn</p>
     </div>
   </footer>
 
@@ -103,5 +164,4 @@
     integrity="sha384-/mhDoLbDldZc3qpsJHpLogda//BVZbgYuw6kof4u2FrCedxOtgRZDTHgHUhOCVim"
     crossorigin="anonymous"></script>
 </body>
-
 </html>
