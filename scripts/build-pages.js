@@ -265,6 +265,7 @@ ${cards}
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-/mhDoLbDldZc3qpsJHpLogda//BVZbgYuw6kof4u2FrCedxOtgRZDTHgHUhOCVim"
     crossorigin="anonymous"></script>
+  <script src="public/analytics.js"></script>
 </body>
 </html>`;
 }
