@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OneActor: Consistent Subject Generation via Cluster-Conditioned Guidance - 王宇航</title>
+  <meta name="description" content="> NeurIPS 2024 | 西交大 + 中电信AI Lab | [arXiv](https://arxiv.org/abs/2404.10267) | [GitHub](https://github.com/JoHnneyWang/OneActor)">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+    integrity="sha384-n8MVd4RsVj49/AMDl88Fwz1NsRHyomxGq7ETTkZPhW5lV5JmFbv7oeTzhww26UlY" crossorigin="anonymous">
+  <link href="../public/background.css" rel="stylesheet">
+  <link href="../public/site.css" rel="stylesheet">
+  <link href="../public/page.css" rel="stylesheet">
+  <style>
+    .katex-display { display: block; margin: 1.2rem 0; text-align: center; overflow-x: auto; overflow-y: hidden; }
+    .katex-display>.katex { display: inline-block; text-align: initial; max-width: 100%; }
+    .katex { font: normal 1.1em KaTeX_Main, "Times New Roman", serif; line-height: 1.2; text-indent: 0; white-space: nowrap; }
+    .katex .katex-html { display: inline !important; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html"><span class="brand-dot"></span>王宇航</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link" href="../index.html">首页</a>
+          <a class="nav-link" href="../About.html">个人介绍</a>
+          <a class="nav-link" href="../data.html">科研项目</a>
+          <a class="nav-link active" href="../blog.html">博客</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5 mb-5">
+    <div class="page-card">
+      <div class="page-content">
+        <div class="blog-post-meta">
+          <span class="text-muted">2026-06-16</span>
+          <a href="../blog.html" class="ms-3">&larr; 返回博客</a>
+        </div>
+        <h1>OneActor: Consistent Subject Generation via Cluster-Conditioned Guidance</h1>
+<blockquote>
+<p>NeurIPS 2024 | 西交大 + 中电信AI Lab | <a href="https://arxiv.org/abs/2404.10267">arXiv</a> | <a href="https://github.com/JoHnneyWang/OneActor">GitHub</a></p>
+</blockquote>
+<hr>
+<h2>1. 问题定义</h2>
+<p>文本生成图像扩散模型如 SDXL 可以生成高质量图像，但其<strong>随机采样</strong>导致同一提示词生成的多张图像中角色身份不一致。现有方法要么依赖外部参考图像（Personalization），要么需要昂贵的全模型调优（TheChosenOne），要么推理时间翻倍（ConsiStory）。</p>
+<p>OneActor 的目标：<strong>仅靠文本提示词驱动</strong>，经过一次轻量调优后，能为同一主体生成在任意新提示词下保持身份一致的多张图像。</p>
+<hr>
+<h2>2. 核心思想</h2>
+<h3>2.1 聚类形式化</h3>
+<p>在扩散模型的潜在空间中，样本天然形成层级聚类结构：</p>
+<pre><code>&quot;hobbit&quot; 基础簇（同一类别的所有图像）
+  ├── 子簇 A（高瘦尖耳）
+  ├── 子簇 B（矮胖圆耳）
+  ├── 子簇 C（某特定长相）
+  └── 子簇 D（另一种特定长相）
+</code></pre>
+<p>普通扩散模型生成的多张图像会随机散落在不同子簇 → <strong>身份不一致</strong>。OneActor 的目标是引导去噪轨迹始终落入<strong>同一个目标子簇</strong>。</p>
+<h3>2.2 聚类引导评分函数</h3>
+<p>从概率角度出发，期望分布为：</p>
+<pre><code>p(x) · p(S^tar | x) / Π p(S^aux_i | x)
+</code></pre>
+<p>取负对数梯度，借助重参数化技巧，得到核心公式 (Eq.6)：</p>
+<pre><code>ε_final = ε_θ(z_t, t)                          ← 无条件扩散先验
+        + η₁·[ε_θ(z_t,t,S^tar) - ε_θ(z_t,t)]     ← 目标吸引分数
+        - η₂·Σ[ε_θ(z_t,t,S^aux_i) - ε_θ(z_t,t)]  ← 辅助排斥分数
+</code></pre>
+<p>两个力方向相反：η₁ 控制&quot;锁定目标身份&quot;的强度，η₂ 控制&quot;排斥非目标身份&quot;的强度。</p>
+<hr>
+<h2>3. 方法架构</h2>
+<h3>3.1 整体流程</h3>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│  ① 数据生成 (generate_data.py, ~30s)                 │
+│     p^tar → 普通SDXL生成N张图 → 用户选1张作目标      │
+│           → 其余N-1张作辅助集                        │
+│           → 顺带存下U-Net编码器中间特征h              │
+├──────────────────────────────────────────────────────┤
+│  ② 投影器调优 (tune.py, 3-6min)                     │
+│     仅训练ϕ (ResNet + Linear + AdaIN)                │
+│     U-Net/VAE/文本编码器全部冻结                      │
+├──────────────────────────────────────────────────────┤
+│  ③ 推理 (inference.py)                              │
+│     ϕ输出c_Δ → 偏移基准词嵌入 → U-Net去噪轨迹        │
+│     被拐向目标子簇 → 生成身份一致的角色              │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+<h3>3.2 聚类条件模型</h3>
+<p><strong>支持网络 ϕ</strong> 是唯一可训练组件：</p>
+<pre><code>ϕ(h, c) → c_Δ    （一个语义方向向量）
+
+其中 h = E_u(z₁, c)  ← U-Net编码器中间特征（生成数据时顺带存储）
+      c = E_t(p)      ← 文本编码器输出
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>设计选择</th>
+<th>动机</th>
+<th>收益</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>用 z₁ 近似替代 z₀</td>
+<td>避免额外的 U-Net 前向传播</td>
+<td><strong>节省 30% 计算量</strong></td>
+</tr>
+<tr>
+<td>复用 U-Net 编码器 E_u 作特征提取</td>
+<td>无需训练特征提取器</td>
+<td>零额外参数</td>
+</tr>
+<tr>
+<td>投影器只含 ResNet+Linear+AdaIN</td>
+<td>容量限制即正则化</td>
+<td>防过拟合</td>
+</tr>
+</tbody></table>
+<h3>3.3 词级偏移</h3>
+<pre><code>提示词嵌入序列: c = [c_a, c_hobbit, c_with, c_robes]
+                                         ↓ 仅修改基准词嵌入
+                        c_hobbit&#39; = c_hobbit + c_Δ
+                                         ↓
+新序列:              c&#39; = [c_a, c_hobbit&#39;, c_with, c_robes]
+</code></pre>
+<p>交叉注意力机制天然将 <code>c_hobbit</code> 与角色空间区域绑定，因此修改作用自动限定在角色区域，无需显式分割。</p>
+<h3>3.4 辅助样本泛化调优</h3>
+<p>每步训练的 batch：</p>
+<pre><code>B = {x^tar, h^tar} ∪ {x^aux_i, h^aux_i}_{i=1}^K
+     1个目标样本          K个辅助样本
+</code></pre>
+<p>三种损失函数：</p>
+<table>
+<thead>
+<tr>
+<th>损失</th>
+<th>公式</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>L_tar</td>
+<td>‖ε − ε_{θ,ϕ}(z_t^tar, t, c, ϕ(h^tar, c))‖²</td>
+<td>学会重建目标身份</td>
+</tr>
+<tr>
+<td>L_aux</td>
+<td>‖ε − ε_{θ,ϕ}(z_t^aux, t, c, ϕ(h^aux, c))‖²</td>
+<td>提供&quot;负样本&quot;，防止过拟合</td>
+</tr>
+<tr>
+<td>L_aver</td>
+<td>‖ε − ε_{θ,ϕ}(z_t^aver, t, c, c_Δ^aver)‖²</td>
+<td>学习平均辅助条件，推理时用作排斥锚点</td>
+</tr>
+</tbody></table>
+<p>平均辅助条件：<code>c_Δ^aver = 1/K · Σ ϕ(h_i^aux, c)</code></p>
+<p>总损失：<code>L = L_tar + λ₁·L_aux + λ₂·L_aver</code></p>
+<p>三种反向传播策略完全一致（标准扩散 MSE），对比效果通过数据组合而非损失函数设计实现。</p>
+<h3>3.5 通用性来源</h3>
+<table>
+<thead>
+<tr>
+<th>层面</th>
+<th>做法</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>架构冻结</td>
+<td>U-Net/VAE/文本编码器全部冻住</td>
+<td>保留全部扩散先验与多样性</td>
+</tr>
+<tr>
+<td>模板化训练</td>
+<td>随机模板填充基准词 (&quot;a portrait of a hobbit&quot;, &quot;a hobbit in garden&quot;, ...)</td>
+<td>ϕ 学会忽略文字变化，只提取身份</td>
+</tr>
+<tr>
+<td>辅助样本</td>
+<td>同一提示词生成的不同 hobbit 作反例</td>
+<td>ϕ 学会区分&quot;同类&quot;与&quot;同身份&quot;</td>
+</tr>
+<tr>
+<td>投影器容量</td>
+<td>极小参数量 (ResNet+Linear+AdaIN)</td>
+<td>容量限制本身是正则化</td>
+</tr>
+</tbody></table>
+<h3>3.6 推理策略</h3>
+<table>
+<thead>
+<tr>
+<th>策略</th>
+<th>做法</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>语义插值</td>
+<td>c_Δ = v·c_Δ^target, v∈[0,1]</td>
+<td>v=1 完全一致，v&lt;1 增加多样性</td>
+</tr>
+<tr>
+<td>簇引导尺度</td>
+<td>调节 η₁ 和 η₂</td>
+<td>η₁ 锁定身份，η₂ 排斥非目标</td>
+</tr>
+<tr>
+<td>部分步引导</td>
+<td>只在部分去噪步施加引导</td>
+<td>解耦一致性与多样性</td>
+</tr>
+<tr>
+<td>零开销模式</td>
+<td>设 η₂=0</td>
+<td>不额外增加推理时间</td>
+</tr>
+<tr>
+<td>平均条件近似</td>
+<td>用 c_Δ^aver 替代逐个计算 N-1 个辅助条件</td>
+<td>推理从 N 次 U-Net 前向降为 2 次</td>
+</tr>
+</tbody></table>
+<p>语义插值性质的<strong>理论贡献</strong>：首次证明扩散模型的语义空间与潜在空间具有相同的插值/外推属性，为精细生成控制提供了新工具。</p>
+<h3>3.7 多主体生成</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>变体一（联合分布）</th>
+<th>变体二（独立训练）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>投影器数量</td>
+<td>1 个</td>
+<td>每主体 1 个</td>
+</tr>
+<tr>
+<td>训练方式</td>
+<td>多主体同框图一次训</td>
+<td>各主体单独训</td>
+</tr>
+<tr>
+<td>增量添加主体</td>
+<td>不可</td>
+<td>可以</td>
+</tr>
+<tr>
+<td>空间约束</td>
+<td>靠交叉注意力自动</td>
+<td>注意力图 + 空间掩码</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>4. 实验评估</h2>
+<h3>4.1 定量指标</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>TheChosenOne 设置</th>
+<th>ConsiStory 设置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>身份一致性</td>
+<td><strong>CLIP-I</strong>（生成图与目标图的 CLIP 图像嵌入余弦相似度）</td>
+<td><strong>DreamSim</strong>（专注前景主体，对人眼感知更贴合）</td>
+</tr>
+<tr>
+<td>提示符合度</td>
+<td><strong>CLIP-T</strong>（提示词文本嵌入与生成图图像嵌入相似度）</td>
+<td><strong>CLIP-Score</strong>（无参考评估）</td>
+</tr>
+</tbody></table>
+<p>测试数据由 ChatGPT 自动生成，避免人工 cherry-picking。</p>
+<h3>4.2 对比方法</h3>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>方法</th>
+<th>弱点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>调优式个性化</td>
+<td>Textual Inversion</td>
+<td>缺乏一致性</td>
+</tr>
+<tr>
+<td>调优式个性化</td>
+<td>DreamBooth</td>
+<td>提示符合度低</td>
+</tr>
+<tr>
+<td>编码式个性化</td>
+<td>IP-Adapter</td>
+<td>偶尔不稳定</td>
+</tr>
+<tr>
+<td>编码式个性化</td>
+<td>BLIP-Diffusion</td>
+<td>图像质量差</td>
+</tr>
+<tr>
+<td>编码式个性化</td>
+<td>ELITE</td>
+<td>多样性有限</td>
+</tr>
+<tr>
+<td>一致性生成</td>
+<td>TheChosenOne</td>
+<td>全模型调优代价大</td>
+</tr>
+<tr>
+<td>一致性生成</td>
+<td>ConsiStory</td>
+<td>多主体布局单一</td>
+</tr>
+</tbody></table>
+<h3>4.3 核心结果</h3>
+<ul>
+<li><strong>Pareto 前沿</strong>：在身份一致性 vs 提示符合度的散点图中，OneActor 在两套指标设置下均形成新的 Pareto 前沿，即没有其他方法在两个维度同时超越它</li>
+<li><strong>消融实验</strong>：<ul>
+<li>去掉 L_aver → 一致性下降</li>
+<li>去掉 L_aux + L_aver → 严重过拟合</li>
+</ul>
+</li>
+<li><strong>效率</strong>：调优 3-6 分钟（4× faster than DreamBooth），推理可选零开销</li>
+<li><strong>t-SNE 验证</strong>：加 cluster guidance 后，生成样本的潜在码明显聚集在目标样本周围</li>
+<li><strong>应用</strong>：故事书创作、风格迁移、ControlNet 位姿控制</li>
+</ul>
+<hr>
+<h2>5. 关键贡献总结</h2>
+<ol>
+<li><strong>首次将一致性主体生成形式化为聚类引导问题</strong>，推导出&quot;目标吸引 + 辅助排斥&quot;的评分函数</li>
+<li><strong>仅调语义空间（ϕ）</strong>，不碰扩散主干，4× 更快调优，可选零推理开销</li>
+<li><strong>辅助样本泛化调优</strong>解决 one-shot 过拟合，用数据组合替代专门对比损失函数</li>
+<li><strong>首次证明语义空间的插值性质</strong>，为精确生成控制提供新工具</li>
+<li><strong>支持多主体生成和增量添加</strong>，兼容 ControlNet 等工作流</li>
+</ol>
+<hr>
+<h2>6. 局限性</h2>
+<ul>
+<li>每次换角色需重新调优 3-6 分钟（虽然已有预训练通用 ϕ 的理论可能，但未开源实现）</li>
+<li>对极端夸张的虚构角色或复杂多对象交互场景可能失效</li>
+<li>依赖用户手动指定基准词，不能自动检测主语</li>
+<li>需要 A100 GPU，消费级显卡可能更慢</li>
+</ul>
+<hr>
+<h2>7. 可迁移研究方向</h2>
+<ol>
+<li><strong>3D 一致性生成</strong>：将 cluster-conditioned 范式扩展到 NeRF / 3D Gaussian Splatting</li>
+<li><strong>视频一致性</strong>：时序聚类引导替代帧间特征匹配</li>
+<li><strong>多模态条件</strong>：在语义空间融合文本 + 图像 + 草图条件</li>
+<li><strong>预训练通用 ϕ</strong>：大规模数据预训练后 zero-shot 推理，消除逐角色调优</li>
+<li><strong>自动基准词检测</strong>：用 NLP 或注意力分析自动定位主语词</li>
+</ol>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center">
+    <div class="container">
+      <p class="mb-1">王宇航 · 西安交通大学 · 建筑学 &amp; 计算机科学与技术</p>
+      <p class="mb-0 text-muted small">Whale@stu.xjtu.edu.cn</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-/mhDoLbDldZc3qpsJHpLogda//BVZbgYuw6kof4u2FrCedxOtgRZDTHgHUhOCVim"
+    crossorigin="anonymous"></script>
+  <script src="../public/analytics.js"></script>
+</body>
+</html>
